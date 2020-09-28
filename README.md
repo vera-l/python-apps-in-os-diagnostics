@@ -220,7 +220,24 @@ kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
 <a name="perf"></a>
 ### perf [^](#index "к оглавлению")
 Потрясающая многофункциональная тулза с низким оверхедом. Работает в нескольких режимах.
-* `perf top`
+* `perf top` - показывает **функции**, наиболее затратные по CPU, в отличие от `top`, который показывает затратные **программы**. Функции могут быть из разных программ (например, одна из python-приложения, вторая - nodejs-приложение, а третья относится к БД), также здесь отображаются системные вызовы.
+```console
+vera@vera$ sudo perf top
+Overhead  Shared Object                              Symbol
+7.75%  python3.8                                     [.] _PyEval_EvalFrameDefault
+4.95%  [kernel]                                      [k] finish_task_switch
+2.62%  [kernel]                                      [k] __lock_text_start
+2.02%  python3.8                                     [.] PyObject_GetAttr
+1.47%  [kernel]                                      [k] __softirqentry_text_start
+1.30%  perf                                          [.] dso__find_symbol
+1.12%  python3.8                                     [.] _PyEval_EvalCodeWithName
+1.07%  [kernel]                                      [k] do_syscall_64
+...
+```
+Вторая колонка - программы, третья - функции, причем префикс `[.]` означает user-space, [k] - kernel-space.
+[IMAGE]
+* `perf record` - собирает ту же информацию, что и `perf top` на протяжении какого-то времени и записывает в файл для последующего постоения отчета или отрисовки диаграммы. 
+
 
 
 <a name="py-spy"></a>
