@@ -337,6 +337,8 @@ Detaching...
 <a name="metrics"></a>
 ## Сбор метрик из приложения для отображения на графиках [^](#index "к оглавлению")
 
+Кроме CPU и памяти, также можно отправлять некторые метрики:
+
 <a name="timings"></a>
 ### Время выполнения нескольких типовых операций [^](#index "к оглавлению")
 
@@ -352,7 +354,11 @@ typical_operation()
 duration_ms = (time.time() - self.start) * 1000
 
 my_metrics.send(f'Typical operation has taken {duration_ms} ms')
+...
 ```
+
+<a name="gc"></a>
+### Работа GC (garbache collector)
 
 <a name="resources"></a>
 ## Доп. литература [^](#index "к оглавлению")
