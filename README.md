@@ -3,8 +3,9 @@
 <a name="index"></a>
 * [Информация о процессах](#processes)
 ([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof), [pidstat](#pidstat), [ps](#ps), [top](#top), [atop](#atop), [htop](#htop))
-* [Сбор метрик из приложения для отображения на графиках](#metrics)
+* [Системные и библиотечные вызовы](#syscalls)
 * [Профилирование](#profiling)
+* [Сбор метрик из приложения для отображения на графиках](#metrics)
 * [Доп. литература](#resources)
 
 <a name="processes"></a>
