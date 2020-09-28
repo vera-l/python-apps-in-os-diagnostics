@@ -236,8 +236,36 @@ Overhead  Shared Object                              Symbol
 ```
 Вторая колонка - программы, третья - функции, причем префикс `[.]` означает user-space, [k] - kernel-space.
 [IMAGE]
-* `perf record` - собирает ту же информацию, что и `perf top` на протяжении какого-то времени и записывает в файл для последующего постоения отчета или отрисовки диаграммы. 
+* `perf record` - собирает ту же информацию, что и `perf top`, на протяжении какого-то времени и записывает в файл `perf.data` для последующего постоения отчета или отрисовки диаграммы. Можно ограничить запись одним процессом.
+```console
+vera@vera$ sudo perf record -p 1064829 sleep 30
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.470 MB perf.data (11997 samples) ]
+vera@vera$ ls
+app.py  perf.data  perf.data.old
+```
+* `perf report` - ищет в директории файл `perf.data` и по нему выводит отчет, по виду аналогичный `perf top`.
 
+```console
+vera@vera$ sudo perf report
+Overhead  Command  Shared Object                              Symbol
+  11.57%  python3  python3.8                                  [.] _PyEval_EvalFrameDefault
+   2.98%  python3  python3.8                                  [.] PyObject_GetAttr
+   1.66%  python3  python3.8                                  [.] _PyObject_GetMethod
+   1.55%  python3  python3.8                                  [.] PyCode_Addr2Line
+   1.44%  python3  python3.8                                  [.] _PyEval_EvalCodeWithName
+   1.35%  python3  [kernel.kallsyms]                          [k] do_syscall_64
+   1.33%  python3  python3.8                                  [.] PyObject_SetAttr
+   1.20%  python3  python3.8                                  [.] _PyFunction_Vectorcall
+   1.15%  python3  python3.8                                  [.] PyUnicode_New
+   1.03%  python3  [kernel.kallsyms]                          [k] __d_lookup_rcu
+   0.97%  python3  libcrypto.so.1.1                           [.] AES_encrypt
+   0.95%  python3  python3.8                                  [.] PyStructSequence_New
+   0.85%  python3  libc-2.31.so                               [.] __xstat64
+   0.73%  python3  python3.8                                  [.] _PyObject_MakeTpCall
+   0.66%  python3  python3.8                                  [.] 0x00000000001ce280
+```
+> Для интерпретируемых языков (python, ruby, php) в отчете будут функции интерпретатора. Это не так полезно, как выполняемые функции для компилируемых языков вроде C, C++, Go и Rust, однако и тут иногда можно извлечь полезную информацию. Для языков с JIT-компиляцией отображение выполняемых функций можно сделать с помощью маппинга (для ноды флагом `node --perf-basic-prof script.js`, для java с помошью https://github.com/jvm-profiling-tools/perf-map-agent).
 
 
 <a name="py-spy"></a>
