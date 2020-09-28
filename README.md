@@ -1,1 +1,2 @@
-# python-apps-in-os-diagnostics
+# Диагностика запущенных python-приложений
+
