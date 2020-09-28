@@ -162,7 +162,7 @@ NAME
 ...
 ```
 
-### dtruss (Mac OS only!)
+### dtruss ( only)
 Отображает системные вызовы. Использует Dtrace
 ```console
 vera@~/dev/dev/dev$ sudo dtruss -p 9616
