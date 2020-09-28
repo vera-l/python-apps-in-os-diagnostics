@@ -85,14 +85,24 @@ root     1271512  0.0  1.5 646168 15804 ?        Ssl  Sep15   1:57 /usr/lib/snap
 root           1  0.0  0.9 168400  9732 ?        Ss   Aug26   4:22 /sbin/init
 root      427317  0.0  0.9 435428  9648 ?        Ss   Sep12   0:01 /usr/bin/python3 /usr/bin/glances
 ```
-`axjf` - отображение процессов в виде дерева
+`ps axjf` - отображение процессов в виде дерева
 ```console
-vera@vera$ ps axjf --sort=-%mem
+vera@vera$ ps axjf
 PPID     PID    PGID     SID TTY        TPGID STAT   UID   TIME COMMAND
       1  669640  669640  664640 ?             -1 Ss       0   0:00 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
  669640  669641  669640  664640 ?             -1 S       33   4:04  \_ nginx: worker process   
 ...
 ```
+
+### top
+
+
+### atop
+
+
+### htop
+
+
 
 
 ## Системные и библиотечные вызовы
