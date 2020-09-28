@@ -167,6 +167,43 @@ NAME
 ### perf
 
 
+## BPF
+
+## Утилиты из пакета `bpfcc-tools` для питона
+* `pythoncalls-bpfcc` - Суммирует вызовы функций питон приложения (также есть подобные для некоторых других высокоуровневых языков) и системные вызовы. Записывает количество вызовов и время выполнения в сумме. 
+
+```console
+vera@vera$ sudo pythoncalls-bpfcc -L -S 1042829
+Attached kernel tracepoints for syscall tracing.
+Tracing calls in process 1062829 (language: python)... Ctrl-C to quit.
+^C
+METHOD                                              # CALLS TIME (us)
+
+local/lib/python3.8/site-packages/httpx/models.py.aread       36 121236.02
+/usr/lib/python3.8/traceback.py.extract_stack           165 122949.36
+/home/vera/.local/lib/python3.8/site-packages/httpx/client.py.send_single_request       30 125382.13
+/home/vera/.local/lib/python3.8/site-packages/httpx/client.py.send_handling_auth       30 125848.94
+/home/vera/.local/lib/python3.8/site-packages/httpx/client.py.send_handling_redirects       30 126382.88
+/home/vera/.local/lib/python3.8/site-packages/httpx/dispatch/http11.py._receive_event       85 134719.61
+/usr/lib/python3.8/asyncio/tasks.py.wait_for            108 167032.10
+/usr/lib/python3.8/traceback.py.extract                 568 219331.55
+/home/vera/.local/lib/python3.8/site-packages/httpx/client.py.send       60 249747.39
+/home/vera/.local/lib/python3.8/site-packages/httpx/client.py.request       60 275263.45
+/home/vera/.local/lib/python3.8/site-packages/httpx/client.py.get       60 275729.60
+epoll_wait                                              199 2291913.30
+/usr/lib/python3.8/asyncio/streams.py.open_connection       14 2422572.04
+/usr/lib/python3.8/asyncio/streams.py.open_connection        5 2461725.92
+futex                                                    59 7306215.55
+select                                                   22 11012235.26
+Detaching kernel probes, please wait...
+```
+
+
+* `pythonflow-bpfcc` - 
+/usr/sbin/pythongc-bpfcc
+/usr/sbin/pythonstat-bpfcc
+```
+Другие утилиты из пакета https://packages.ubuntu.com/ru/bionic/all/bpfcc-tools/filelist. Дока будет доступна `man ...` после установки пакета для всех утилит. 
 
 
 
