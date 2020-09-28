@@ -110,6 +110,14 @@ PPID     PID    PGID     SID TTY        TPGID STAT   UID   TIME COMMAND
 ...
 ```
 
+Если нужно найти конкретный процесс, грепаем по команде запуска:
+
+```console
+vera@vera:/var/www/sanc$ ps aux | grep 'app.py'
+vera     1065829  0.1  5.2 592128 52620 ?        Ssl  13:22   0:27 python3 app.py
+vera     1155100  0.0  0.0  11076   676 pts/1    S+   20:14   0:00 grep --color=auto app.py
+```
+
 <a name="top"></a>
 ### top [^](#index "к оглавлению")
 
@@ -211,6 +219,8 @@ kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
 
 <a name="perf"></a>
 ### perf [^](#index "к оглавлению")
+Потрясающая многофункциональная тулза с низким оверхедом. Работает в нескольких режимах.
+* `perf top`
 
 
 <a name="py-spy"></a>
