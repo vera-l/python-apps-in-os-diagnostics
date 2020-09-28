@@ -6,6 +6,7 @@
 * [Системные и библиотечные вызовы](#syscalls)
 ([strace](#strace), [ltrace](#ltrace), [dtruss](#dtruss))
 * [Профилирование](#profiling)
+([perf](#perf), [py-spy](#py-spy))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
 * [Доп. литература](#resources)
 
@@ -207,10 +208,14 @@ kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
 <a name="profiling"></a>
 ## Профилирование [^](#index "к оглавлению")
 
+<a name="perf"></a>
 ### perf [^](#index "к оглавлению")
 
+<a name="py-spy"></a>
+### py-spy [^](#index "к оглавлению")
 
-## BPF [^](#index "к оглавлению")
+<a name="ebpf"></a>
+## eBPF [^](#index "к оглавлению")
 
 
 ```
