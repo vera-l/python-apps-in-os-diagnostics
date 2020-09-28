@@ -81,6 +81,7 @@ NAME
        epoll_wait, epoll_pwait - wait for an I/O event on an epoll file descriptor
 ...
 ```
+Кейс: в логах была нечитаемая информация. Смотрим вывод `strace` - там много вызовов `write('a')` с одним символом. Значит, в лог пишут несколько процессов по одному символу. Уже стало понятнее, куда дальше копать.
 
 ## Доп. литература
 https://github.com/vera-l/python-resources#os
