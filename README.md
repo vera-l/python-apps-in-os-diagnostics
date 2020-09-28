@@ -266,6 +266,7 @@ Overhead  Command  Shared Object                              Symbol
    0.66%  python3  python3.8                                  [.] 0x00000000001ce280
 ```
 > Для интерпретируемых языков (python, ruby, php) в отчете будут функции интерпретатора. Это не так полезно, как выполняемые функции для компилируемых языков вроде C, C++, Go и Rust, однако и тут иногда можно извлечь полезную информацию. Для языков с JIT-компиляцией отображение выполняемых функций можно сделать с помощью маппинга (для ноды флагом `node --perf-basic-prof script.js`, для java с помошью https://github.com/jvm-profiling-tools/perf-map-agent).
+
 * `perf annotate` - также строит отчет по файлу `perf.data`, но отображает ассемблерный код. В такой же отчет можно перейти из отчета `perf report`, если нажать клавишу `a` на одной из его строк.
 ```console
 vera@vera$ sudo perf annotate
@@ -287,9 +288,34 @@ Percent│        mov        %r10,%rdx
   0.07 │     │↓ jne        8698
 ```
 
+* `perf script` - 
+```console
+vera@vera$ sudo perf script
+python3 1062829 2884422.486217:     250000 cpu-clock:pppH:      7f630b435e0b [unknown] (/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1)
+python3 1062829 2884422.486465:     250000 cpu-clock:pppH:            56588d _PyEval_EvalCodeWithName+0x17d (/usr/bin/python3.8)
+python3 1062829 2884422.486716:     250000 cpu-clock:pppH:            4243b0 __errno_location@plt+0x0 (/usr/bin/python3.8)
+python3 1062829 2884422.486967:     250000 cpu-clock:pppH:            5a894b PyTuple_New+0x8b (/usr/bin/python3.8)
+python3 1062829 2884422.487226:     250000 cpu-clock:pppH:            5bda77 PyObject_GetAttr+0xf7 (/usr/bin/python3.8)
+python3 1062829 2884422.487477:     250000 cpu-clock:pppH:            576c8e _PyUnicodeWriter_PrepareInternal+0xce (/usr/bin/pytho>
+python3 1062829 2884422.487717:     250000 cpu-clock:pppH:            4fbf3e [unknown] (/usr/bin/python3.8)
+python3 1062829 2884422.487987:     250000 cpu-clock:pppH:            502651 [unknown] (/usr/bin/python3.8)
+python3 1062829 2884422.488228:     250000 cpu-clock:pppH:            5bd992 PyObject_GetAttr+0x12 (/usr/bin/python3.8)
+python3 1062829 2884422.488478:     250000 cpu-clock:pppH:            5025b1 [unknown] (/usr/bin/python3.8)
+python3 1062829 2884422.488714:     250000 cpu-clock:pppH:            5a595c [unknown] (/usr/bin/python3.8)
+python3 1062829 2884422.488966:     250000 cpu-clock:pppH:            56729f _PyEval_EvalFrameDefault+0x2ff (/usr/bin/python3.8)
+```
+Обычно используется для построения флейм-диаграмм - популярного средства для обнаружения проблем, придуманного Бренданом Греггом (https://github.com/brendangregg/FlameGraph).
+```console
+vera@vera$ sudo perf script > out.perf
+vera@vera:/var/www/sanc$ ls
+app.py  out.perf  perf.data  perf.data.old
+```
+
 <a name="py-spy"></a>
 ### py-spy [^](#index "к оглавлению")
-Популярный семплирующий профилировщик https://github.com/benfred/py-spy, пришел на смену pyflamegraph от Uber, который не работает с питоном 3.7 и больше не поддерживается.
+Популярный семплирующий профилировщик https://github.com/benfred/py-spy, написанный на Rust, пришел на смену pyflamegraph от Uber, который не работает с питоном 3.7 и больше не поддерживается. Очень низкий оверхед. Частоту снятия семплов можно задать.
+Устанавливается через `pip3 install py-spy`. Работает в нескольких режимах, как и предыдущий профилировщик.
+* ``
 
 <a name="ebpf"></a>
 ## eBPF [^](#index "к оглавлению")
