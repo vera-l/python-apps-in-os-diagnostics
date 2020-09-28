@@ -162,6 +162,31 @@ NAME
 ...
 ```
 
+### dtruss (Mac OS only!)
+Отображает системные вызовы. Использует Dtrace
+```console
+vera@~/dev/dev/dev$ sudo dtruss -p 9616
+dtrace: system integrity protection is on, some features will not be available
+
+SYSCALL(args) 		 = return
+gettimeofday(0x7000039E1740, 0x0, 0x0)		 = 0 0
+psynch_cvsignal(0x1089C7620, 0x2C0000002D00, 0x2C00)		 = 257 0
+psynch_cvwait(0x1089C7620, 0x2C0100002D00, 0x2C00)		 = 0 0
+kqueue(0x0, 0x0, 0x0)		 = 17 0
+kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
+socketpair(0x1, 0x1, 0x0)		 = 0 0
+gettimeofday(0x7000039E1760, 0x0, 0x0)		 = 0 0
+setsockopt(0x12, 0xFFFF, 0x1100)		 = 0 0
+sendto_nocancel(0x10, 0x7FCC5BA27E80, 0x32)		 = 50 0
+sendmsg_nocancel(0x10, 0x700003EE3BD0, 0x0)		 = 1 0
+close_nocancel(0x13)		 = 0 0
+select_nocancel(0x13, 0x700003EE3BD0, 0x0)		 = 1 0
+recvfrom_nocancel(0x12, 0x700003EE3BA0, 0x4)		 = 4 0
+close_nocancel(0x12)		 = 0 0
+kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
+```
+
+
 ## Профилирование
 
 ### perf
@@ -286,10 +311,8 @@ Detaching...
 
 
 
+## Отправка 
 
 
 ## Доп. литература
 https://github.com/vera-l/python-resources#os
-
-
-
