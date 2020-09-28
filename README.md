@@ -26,5 +26,8 @@ systemd(1)─┬─accounts-daemon(323)─┬─{gdbus}(332)
            └─systemd-udevd(235)
 ```
 
+## Доп. литература
+https://github.com/vera-l/python-resources#os
+
 
 
