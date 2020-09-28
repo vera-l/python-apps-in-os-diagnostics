@@ -2,7 +2,7 @@
 
 <a name="index"></a>
 * [Информация о процессах](#processes)
-([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof))
+([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof), [pidstat](#pidstat), [ps](#ps), [top](#top), [atop](#atop), [htop](#htop))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
 * [Профилирование](#profiling)
 * [Доп. литература](#resources)
@@ -61,7 +61,7 @@ root      427357  0.0  0.9 434428  9648 ?        Ss   Sep12   0:01 /usr/bin/pyth
 vera     1062859  0.0  4.8 545896 48272 ?        Ssl  13:22   0:07 python3 app.py
 ```
 
-
+<a name="pidstat"></a>
 ### pidstat [^](#index "к оглавлению")
 Статистика по процессам. Добавим `-p <PID> 1` - по процессу с pid каждую секунду. На 2-7 секундах подавалась нагрузка.
 ```console
@@ -81,6 +81,7 @@ Linux 5.4.0-29-generic (vera) 	09/28/20 	_x86_64_	(1 CPU)
 Average:     1000   1062829    1.50    0.30    0.00    0.10    1.80     -  python3
 ```
 
+<a name="ps"></a>
 ### ps [^](#index "к оглавлению")
 Отображает снимок процессов **на данный момент** с подробной информацией. Имеет много опций и возможностей (подробнее `man ps`).
 `ps aux` - Отображает снимок всех запущенных в системе процессов на данный момент, с подробной информацией. 
@@ -105,12 +106,13 @@ PPID     PID    PGID     SID TTY        TPGID STAT   UID   TIME COMMAND
 ...
 ```
 
+<a name="top"></a>
 ### top [^](#index "к оглавлению")
 
-
+<a name="atop"></a>
 ### atop [^](#index "к оглавлению")
 
-
+<a name="htop"></a>
 ### htop [^](#index "к оглавлению")
 
 
