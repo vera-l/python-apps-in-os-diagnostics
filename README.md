@@ -33,7 +33,7 @@ systemd(1)─┬─accounts-daemon(323)─┬─{gdbus}(332)
 ### pidstat
 Статистика по процессам. Добавим `-p <PID> 1` - по процессу с pid каждую секунду. На 2-7 секундах подавалась нагрузка.
 ```console
-vera@vera:/var/www/sanc$ pidstat -p 1062829 1
+vera@vera$ pidstat -p 1062829 1
 Linux 5.4.0-29-generic (vera) 	09/28/20 	_x86_64_	(1 CPU)
 
 14:52:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
