@@ -169,6 +169,24 @@ NAME
 
 ## BPF
 
+```
+...
+#ifndef LATENCY
+  BPF_HASH(counts, struct method_t, u64);            // number of calls
+  #ifdef SYSCALLS
+    BPF_HASH(syscounts, u64, u64);                   // number of calls per IP
+  #endif  // SYSCALLS
+#else
+  BPF_HASH(times, struct method_t, struct info_t);
+  BPF_HASH(entry, struct entry_t, u64);              // timestamp at entry
+  #ifdef SYSCALLS
+    BPF_HASH(systimes, u64, struct info_t);          // latency per IP
+    BPF_HASH(sysentry, u64, struct syscall_entry_t); // ts + IP at entry
+  #endif  // SYSCALLS
+#endif
+...
+```
+
 ## Утилиты из пакета `bpfcc-tools` для питона
 * `pythoncalls-bpfcc` - Суммирует вызовы функций питон приложения (также есть подобные для некоторых других высокоуровневых языков) и системные вызовы. Записывает количество вызовов и время выполнения в сумме. 
 
