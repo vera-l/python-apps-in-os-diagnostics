@@ -5,7 +5,7 @@
 ### pstree
 Отображает дерево процессов. Доп опции `pt` включат отображение pid и потоков.
 
-```bash
+```console
 vera@vera$ pstree -pt
 systemd(1)─┬─accounts-daemon(323)─┬─{gdbus}(332)
            │                      └─{gmain}(338)
