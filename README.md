@@ -51,6 +51,37 @@ Linux 5.4.0-29-generic (vera) 	09/28/20 	_x86_64_	(1 CPU)
 Average:     1000   1062829    1.50    0.30    0.00    0.10    1.80     -  python3
 ```
 
+## Системные и библиотечные вызовы
+
+### strace
+Выводит системные вызовы и сиглалы конкретно процесса
+```console
+vera@vera$ sudo strace -p 1032829 
+strace: Process 1032829 attached
+epoll_wait(3, [{EPOLLIN, {u32=11, u64=11}}], 1024, -1) = 1
+accept4(11, NULL, NULL, SOCK_CLOEXEC|SOCK_NONBLOCK) = 13
+getpid()                                = 1032829
+stat("app.py", {st_mode=S_IFREG|0664, st_size=1679, ...}) = 0
+setsockopt(13, SOL_TCP, TCP_NODELAY, [1], 4) = 0
+stat("app.py", {st_mode=S_IFREG|0664, st_size=1679, ...}) = 0
+accept4(11, NULL, NULL, SOCK_CLOEXEC|SOCK_NONBLOCK) = -1 EAGAIN (Resource temporarily unavailable)
+getsockname(13, {sa_family=AF_INET, sin_port=htons(1845), sin_addr=inet_addr("74.443.134.152")}, [128->16]) = 0
+getpeername(13, {sa_family=AF_INET, sin_port=htons(13825), sin_addr=inet_addr("169.252.119.327")}, [128->16]) = 0
+stat("/home/vera/.local/lib/python3.8/site-packages/sanic/server.py", {st_mode=S_IFREG|0664, st_size=36448, ...}) = 0
+stat("app.py", {st_mode=S_IFREG|0664, st_size=1679, ...}) = 0
+stat("/home/vera/.local/lib/python3.8/site-packages/sanic/server.py", {st_mode=S_IFREG|0664, st_size=36448, ...}) = 0
+```
+Посмотреть, что означает тот или иной состемный вызов:
+```console
+vera@vera$ man 2 epoll_wait
+
+EPOLL_WAIT(2)                         Linux Programmer's Manual                         EPOLL_WAIT(2)
+
+NAME
+       epoll_wait, epoll_pwait - wait for an I/O event on an epoll file descriptor
+...
+```
+
 ## Доп. литература
 https://github.com/vera-l/python-resources#os
 
