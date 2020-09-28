@@ -266,7 +266,26 @@ Overhead  Command  Shared Object                              Symbol
    0.66%  python3  python3.8                                  [.] 0x00000000001ce280
 ```
 > Для интерпретируемых языков (python, ruby, php) в отчете будут функции интерпретатора. Это не так полезно, как выполняемые функции для компилируемых языков вроде C, C++, Go и Rust, однако и тут иногда можно извлечь полезную информацию. Для языков с JIT-компиляцией отображение выполняемых функций можно сделать с помощью маппинга (для ноды флагом `node --perf-basic-prof script.js`, для java с помошью https://github.com/jvm-profiling-tools/perf-map-agent).
-
+* `perf annotate` - также строит отчет по файлу `perf.data`, но отображает ассемблерный код. В такой же отчет можно перейти из отчета `perf report`, если нажать клавишу `a` на одной из его строк.
+```console
+vera@vera$ sudo perf annotate
+_PyEval_EvalFrameDefault  /usr/bin/python3.8 [Percent: local period]
+Percent│        mov        %r10,%rdx
+  0.07 │        sar        %rdx
+  0.29 │        movzbl     (%rax,%rdx,1),%r9d
+  4.39 │        test       %r9b,%r9b
+       │      ↓ je         51b0
+  0.14 │        shl        $0x5,%r9
+       │        lea        -0x20(%r11,%r9,1),%r14
+  0.43 │        cmpb       $0x0,0x18(%r14)
+  6.99 │     ┌──jle        8698
+  0.14 │     │  mov        0x18(%rdi),%r8
+       │     │  cmp        %r8,0x8(%r14)
+       │     │↓ jne        8698
+  0.79 │     │  mov        0x18(%rsi),%rdx
+  0.07 │     │  cmp        %rdx,0x10(%r14)
+  0.07 │     │↓ jne        8698
+```
 
 <a name="py-spy"></a>
 ### py-spy [^](#index "к оглавлению")
