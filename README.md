@@ -2,7 +2,7 @@
 
 <a name="index"></a>
 * [Информация о процессах](#processes)
-[pstree](#pstree)
+([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
 * [Профилирование](#profiling)
 * [Доп. литература](#resources)
@@ -37,6 +37,7 @@ systemd(1)─┬─accounts-daemon(323)─┬─{gdbus}(332)
            └─systemd-udevd(235)
 ```
 
+<a name="pgrep"></a>
 ### pgrep [^](#index "к оглавлению")
 Поиск процесса по имени и некоторым атрибутам. Аналогичная `pkill` - посылает найденным процессам сигнал.
 ```console
@@ -45,6 +46,7 @@ vera@vera$ pgrep -a nginx
 669641 nginx: worker process 
 ```
 
+<a name="pidof"></a>
 ### pidof [^](#index "к оглавлению")
 Аналог `pgrep`. Выводит список pid процессов, имя которых совпадает с заданным
 ```console
