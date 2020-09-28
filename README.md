@@ -28,8 +28,13 @@ systemd(1)─┬─accounts-daemon(323)─┬─{gdbus}(332)
            └─systemd-udevd(235)
 ```
 
-
-
+### pgrep
+Поиск процесса по имени и некоторым атрибутам. Аналогичная `pkill` - посылает найденным процессам сигнал.
+```console
+vera@vera$ pgrep -a nginx
+669640 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+669641 nginx: worker process 
+```
 
 
 ### pidstat
@@ -107,6 +112,16 @@ NAME
      pthread_cond_signal -- unblock a thread waiting for a condition variable
 ...
 ```
+
+## Профилирование
+
+### perf
+
+
+
+
+
+
 
 ## Доп. литература
 https://github.com/vera-l/python-resources#os
