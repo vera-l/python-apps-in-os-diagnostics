@@ -241,8 +241,27 @@ CPU PID    TID    TIME(us) METHOD
 
 ```
        
-* `pythongc-bpfcc` - 
-* `pythonstat-bpfcc` -
+* `pythongc-bpfcc` - Записывает события сборки мусора. Можно задать порог длительности сборки и фильтр по коллекции.
+
+```console
+vera@vera:/var/www/sanc$ sudo pythongc-bpfcc 1142829
+        
+Tracing garbage collections in python process 1142829... Ctrl-C to quit.
+START    TIME (us) DESCRIPTION                             
+10.804   835.96   None
+22.757   999.44   None
+27.725   826.92   None
+```
+
+* `pythonstat-bpfcc` - Собирает статистику по приложению (события сборки мусора, исключения, создание потоков, выделение памяти, вызовы методов и т.д.). Отображаются в виде отсортированной таблицы.
+
+```console
+vera@vera$ sudo pythonstat-bpfcc 1032829
+17:48:42 loadavg: 0.00 0.00 0.00 1/158 1122088
+
+PID    CMDLINE              METHOD/s   GC/s   OBJNEW/s   CLOAD/s  EXC/s  THR/s 
+Detaching...
+```
 
 Другие утилиты из пакета https://packages.ubuntu.com/ru/bionic/all/bpfcc-tools/filelist. Дока будет доступна `man ...` после установки пакета для всех утилит. 
 
