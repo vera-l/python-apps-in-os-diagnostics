@@ -212,8 +212,10 @@ kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
 <a name="perf"></a>
 ### perf [^](#index "к оглавлению")
 
+
 <a name="py-spy"></a>
 ### py-spy [^](#index "к оглавлению")
+Популярный семплирующий профилировщик https://github.com/benfred/py-spy, пришел на смену pyflamegraph от Uber, который не работает с питоном 3.7 и больше не поддерживается.
 
 <a name="ebpf"></a>
 ## eBPF [^](#index "к оглавлению")
