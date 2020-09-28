@@ -8,6 +8,7 @@
 * [Профилирование](#profiling)
 ([perf](#perf), [py-spy](#py-spy))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
+([timings](#timings), [gc](#gc), [locks](#locks))
 * [Доп. литература](#resources)
 
 <a name="processes"></a>
