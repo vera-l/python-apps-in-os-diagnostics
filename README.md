@@ -5,11 +5,12 @@
 ### pstree
 Отображает дерево процессов. Доп опции `pt` включат отображение pid и потоков.
 
-```bash
+```shell
 vera@vera$ pstree -pst
 systemd(1)─┬─accounts-daemon(323)─┬─{gdbus}(332)
            │                      └─{gmain}(338)
            ├─cron(325)
+           ├─nginx(669630)───nginx(669631)
            ├─python3(1062829)─┬─{python3}(1062341)
            │                  ├─{python3}(1062342)
            │                  ├─{python3}(1062343)
