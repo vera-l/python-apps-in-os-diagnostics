@@ -70,6 +70,31 @@ Linux 5.4.0-29-generic (vera) 	09/28/20 	_x86_64_	(1 CPU)
 Average:     1000   1062829    1.50    0.30    0.00    0.10    1.80     -  python3
 ```
 
+### ps
+Отображает снимок процессов на данный момент с подробной информацией. Имеет много опций и возможностей (подробнее `man ps`).
+`ps aux` - Отображает снимок всех запущенных в системе процессов на данный момент, с подробной информацией. 
+Добавим `--sort=-%cpu` или `--sort=-%mem` - сортировка по использованию cpu или памяти. Например,
+```console
+vera@vera:$ ps aux --sort=-%mem | head
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         218  0.0  7.4 137748 75164 ?        S<s  Aug26  28:21 /lib/systemd/systemd-journald
+dd-agent  668713  0.6  5.8 950228 58368 ?        Ssl  Aug29 282:44 /opt/datadog-agent/bin/agent/agent 
+vera     1062819  0.0  5.1 591588 52168 ?        Ssl  13:22   0:09 python3 app.py
+mongodb  2282713  0.3  4.0 984948 40588 ?        Ssl  Sep18  51:34 /usr/bin/mongod 
+root     1271512  0.0  1.5 646168 15804 ?        Ssl  Sep15   1:57 /usr/lib/snapd/snapd
+root           1  0.0  0.9 168400  9732 ?        Ss   Aug26   4:22 /sbin/init
+root      427317  0.0  0.9 435428  9648 ?        Ss   Sep12   0:01 /usr/bin/python3 /usr/bin/glances
+```
+`axjf` - отображение процессов в виде дерева
+```console
+vera@vera$ ps axjf --sort=-%mem
+PPID     PID    PGID     SID TTY        TPGID STAT   UID   TIME COMMAND
+      1  669640  669640  664640 ?             -1 Ss       0   0:00 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+ 669640  669641  669640  664640 ?             -1 S       33   4:04  \_ nginx: worker process   
+...
+```
+
+
 ## Системные и библиотечные вызовы
 
 ### strace
