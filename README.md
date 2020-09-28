@@ -2,6 +2,7 @@
 
 <a name="index"></a>
 * [Информация о процессах](#processes)
+[pstree](#pstree)
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
 * [Профилирование](#profiling)
 * [Доп. литература](#resources)
@@ -133,7 +134,7 @@ stat("/home/vera/.local/lib/python3.8/site-packages/sanic/server.py", {st_mode=S
 stat("app.py", {st_mode=S_IFREG|0664, st_size=1679, ...}) = 0
 stat("/home/vera/.local/lib/python3.8/site-packages/sanic/server.py", {st_mode=S_IFREG|0664, st_size=36448, ...}) = 0
 ```
-Посмотреть, что означает тот или иной состемный вызов:
+Посмотреть, что означает тот или иной системный вызов:
 ```console
 vera@vera$ man 2 epoll_wait
 
