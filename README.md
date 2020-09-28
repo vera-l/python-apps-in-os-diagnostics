@@ -169,6 +169,7 @@ NAME
 
 ## BPF
 
+
 ```
 ...
 #ifndef LATENCY
@@ -185,6 +186,24 @@ NAME
   #endif  // SYSCALLS
 #endif
 ...
+```
+
+## bpftrace
+
+```console
+vera@vera$ sudo bpftrace -e 'usdt:/usr/bin/python3.8:function__entry {printf("%d: %s:%d %s() \n", pid, str(arg0), arg2, str(arg1))}' -p $(pidof python3)
+Attaching 1 probe...
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/periodic_:115 __should_stop() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_cli:731 target() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_cli:1747 _process_periodic_tasks() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_cli:1723 _process_kill_cursors() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/topology.:433 update_pool() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py:1128 remove_stale_sockets() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py:384 max_idle_time_seconds() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py:377 min_pool_size() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/periodic_:115 __should_stop() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_cli:731 target() 
+1062829: /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_cli:1747 _process_periodic_tasks() 
 ```
 
 ## Утилиты из пакета `bpfcc-tools` для питона
