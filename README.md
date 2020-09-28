@@ -198,8 +198,31 @@ select                                                   22 11012235.26
 Detaching kernel probes, please wait...
 ```
 
+* `pythonflow-bpfcc` - записывает цепочку выполнения методов, есть возможность фильтрации по классу или методу
 
-* `pythonflow-bpfcc` - 
+```console
+vera@vera$ sudo pythonflow-bpfcc 1082829
+Tracing method calls in python process 1062829... Ctrl-C to quit.
+CPU PID    TID    TIME(us) METHOD
+0   1062829 1062901 0.244    -> /home/vera/.local/lib/python3.8/site-packages/pymongo/periodic_executor.py.__should_stop
+0   1062829 1062901 0.244    <- /home/vera/.local/lib/python3.8/site-packages/pymongo/periodic_executor.py.__should_stop
+0   1062829 1062901 0.244    -> /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_client.py.target
+0   1062829 1062901 0.245      -> /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_client.py._process_periodic_tasks
+0   1062829 1062901 0.245        -> /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_client.py._process_kill_cursors
+0   1062829 1062901 0.245        <- /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_client.py._process_kill_cursors
+0   1062829 1062901 0.245        -> /home/vera/.local/lib/python3.8/site-packages/pymongo/topology.py.update_pool
+0   1062829 1062901 0.245          -> /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py.remove_stale_sockets
+0   1062829 1062901 0.245            -> /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py.max_idle_time_seconds
+0   1062829 1062901 0.245            <- /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py.max_idle_time_seconds
+0   1062829 1062901 0.245            -> /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py.min_pool_size
+0   1062829 1062901 0.245            <- /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py.min_pool_size
+0   1062829 1062901 0.246          <- /home/vera/.local/lib/python3.8/site-packages/pymongo/pool.py.remove_stale_sockets
+0   1062829 1062901 0.246        <- /home/vera/.local/lib/python3.8/site-packages/pymongo/topology.py.update_pool
+0   1062829 1062901 0.246      <- /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_client.py._process_periodic_tasks
+0   1062829 1062901 0.246    <- /home/vera/.local/lib/python3.8/site-packages/pymongo/mongo_client.py.target
+
+```
+       
 * `pythongc-bpfcc` - 
 * `pythonstat-bpfcc` -
 
