@@ -200,9 +200,9 @@ Detaching kernel probes, please wait...
 
 
 * `pythonflow-bpfcc` - 
-/usr/sbin/pythongc-bpfcc
-/usr/sbin/pythonstat-bpfcc
-```
+* `pythongc-bpfcc` - 
+* `pythonstat-bpfcc` -
+
 Другие утилиты из пакета https://packages.ubuntu.com/ru/bionic/all/bpfcc-tools/filelist. Дока будет доступна `man ...` после установки пакета для всех утилит. 
 
 
