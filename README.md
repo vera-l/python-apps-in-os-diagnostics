@@ -1,6 +1,6 @@
 # Диагностика запущенных python-приложений
 
-Узнаем о состоянии процесса и всей системы при помощи нескольких утилит.
+Узнаем о состоянии процесса и всей системы при помощи нескольких утилит. 
 
 ## Список процессов
 
@@ -82,6 +82,31 @@ NAME
 ...
 ```
 Кейс: в логах была нечитаемая информация. Смотрим вывод `strace` - там много вызовов `write('a')` с одним символом. Значит, в лог пишут несколько процессов по одному символу. Уже стало понятнее, куда дальше копать.
+
+### ltrace
+Выводит список библиотечных вызовов для данного процесса. 
+```console
+vera@vera$ sudo ltrace -p 1032829 
+pthread_mutex_lock(0x934b70, 0, 0, 0xc279f9b)                   = 0
+pthread_mutex_lock(0x934bc8, 0, 0, 0)                           = 0
+pthread_cond_signal(0x934b98, 0, 0, 0)                          = 0
+pthread_mutex_unlock(0x934bc8, 0, 0, 0)                         = 0
+pthread_mutex_unlock(0x934b70, 0, 0, 0)                         = 0
+clock_gettime(1, 0x62d2650, 0xf8003950, 0)                      = 0
+ceil(3, 0x98bc270, 3, 0x3b9aca00)                               = 0
+clock_gettime(1, 0x62d2600, 0, 28)                              = 0
+^C
+```
+Посмотреть, что означает тот или иной библиотечный вызов:
+```console
+vera@vera$ man 3 pthread_cond_signal
+
+PTHREAD_COND_SIGNAL(3)   BSD Library Functions Manual   PTHREAD_COND_SIGNAL(3)
+
+NAME
+     pthread_cond_signal -- unblock a thread waiting for a condition variable
+...
+```
 
 ## Доп. литература
 https://github.com/vera-l/python-resources#os
