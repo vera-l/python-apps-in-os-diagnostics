@@ -36,6 +36,20 @@ vera@vera$ pgrep -a nginx
 669641 nginx: worker process 
 ```
 
+### pidof
+Аналог `pgrep`. Выводит список pid процессов, имя которых совпадает с заданным
+```console
+vera@vera$ pidof python3
+1062859 427357 357
+```
+и действительно
+```console
+vera@vera$ ps aux | grep 'python'
+root         357  0.0  0.4  34900  4832 ?        Ss   Aug26   0:00 /usr/bin/python3 /usr/bin/networkd-dispatcher 
+root      427357  0.0  0.9 434428  9648 ?        Ss   Sep12   0:01 /usr/bin/python3 /usr/bin/glances
+vera     1062859  0.0  4.8 545896 48272 ?        Ssl  13:22   0:07 python3 app.py
+```
+
 
 ### pidstat
 Статистика по процессам. Добавим `-p <PID> 1` - по процессу с pid каждую секунду. На 2-7 секундах подавалась нагрузка.
