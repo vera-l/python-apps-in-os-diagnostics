@@ -16,7 +16,9 @@
 <a name="processes"></a>
 ## Информация о процессах [^](#index "к оглавлению")
 
-Узнаем о состоянии процесса и всей системы при помощи нескольких утилит. Для проведения диагностики нам понадобится узнать pid процесса. В системе также присутствуют и другие приложения, которые могут оказывать влияние на наше. Для каждой программы подробная справка с дополнительными опциями доступна по `man <name>`
+Узнаем о состоянии нашего приложения и всей системы при помощи нескольких утилит. Для проведения диагностики нам понадобится узнать pid процесса. В системе также присутствуют и другие приложения, которые могут оказывать влияние на наше. 
+Рассмотрим ряд полезных программ на примере тестовой виртуалки, где работает nginx, асинхронное python-приложение, mongodb, а для мониторинга используется сервис datadog.
+Для каждой программы подробная справка с дополнительными опциями доступна по `man <name>`
 
 <a name="pstree"></a>
 ### pstree [^](#index "к оглавлению")
@@ -109,7 +111,7 @@ cwd              mem        patch_state    stat
 * `status` - состояние процесса, pid, threads, parent pid (в данном случае 1 - наше приложение запустил `systemd`) и менее полезное.
 
 ```console
-vera@vera:/var/www/sanc$ cat /proc/1052829/status
+vera@vera$ cat /proc/1052829/status
 Name:	python3
 Umask:	0022
 State:	S (sleeping)
@@ -261,7 +263,7 @@ PPID     PID    PGID     SID TTY        TPGID STAT   UID   TIME COMMAND
 Если нужно найти конкретный процесс, грепаем по команде запуска:
 
 ```console
-vera@vera:/var/www/sanc$ ps aux | grep 'app.py'
+vera@vera$ ps aux | grep 'app.py'
 vera     1065829  0.1  5.2 592128 52620 ?        Ssl  13:22   0:27 python3 app.py
 vera     1155100  0.0  0.0  11076   676 pts/1    S+   20:14   0:00 grep --color=auto app.py
 ```
@@ -346,7 +348,7 @@ mongod  2222783  mongodb mem    REG  252,2   598104 28124 /usr/lib/x86_64-linux-
 Список окрытых портов TCP:
 
 ```console
-vera@vera:/var/www/sanc$ sudo lsof -i tcp
+vera@vera$ sudo lsof -i tcp
 COMMAND       PID            USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
 glances    427367            root    4u  IPv4  5853933      0t0  TCP localhost:62209 (LISTEN)
 agent      668793        dd-agent    6u  IPv4  1062091      0t0  TCP localhost:6000 (LISTEN)
@@ -377,7 +379,7 @@ mongod    2282783         mongodb   34u  IPv4 13611495      0t0  TCP localhost:2
 Вывести, какой процесс использует определенный порт:
 
 ```console
-vera@vera:/var/www/sanc$ sudo lsof -i :135
+vera@vera$ sudo lsof -i :135
 COMMAND     PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
 python3 1052829 vera   11u  IPv4 13611465      0t0  TCP *:135 (LISTEN)
 ```
@@ -391,7 +393,7 @@ python3 1052829 vera   11u  IPv4 13611465      0t0  TCP *:135 (LISTEN)
 Например, так можно вывести список только прослушивающихся TCP портов с выводом pid и имен программ без замены портов на символьный код.
 
 ```console
-vera@vera:/var/www/sanc$ sudo netstat -nltp
+vera@vera$ sudo netstat -nltp
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
 tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      679640/nginx: maste 
@@ -517,7 +519,7 @@ Overhead  Shared Object                              Symbol
 ...
 ```
 Вторая колонка - программы, третья - функции, причем префикс `[.]` означает user-space, [k] - kernel-space.
-[IMAGE]
+
 * `perf record` - собирает ту же информацию, что и `perf top`, на протяжении какого-то времени и записывает в файл `perf.data` для последующего постоения отчета или отрисовки диаграммы. Можно ограничить запись одним процессом.
 ```console
 vera@vera$ sudo perf record -p 1064829 sleep 30
@@ -589,7 +591,7 @@ python3 1062829 2884422.488966:     250000 cpu-clock:pppH:            56729f _Py
 Обычно используется для построения флейм-диаграмм - популярного средства для обнаружения проблем, придуманного Бренданом Греггом (https://github.com/brendangregg/FlameGraph).
 ```console
 vera@vera$ sudo perf script > out.perf
-vera@vera:/var/www/sanc$ ls
+vera@vera$ ls
 app.py  out.perf  perf.data  perf.data.old
 ```
 
