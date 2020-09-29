@@ -2,7 +2,7 @@
 
 <a name="index"></a>
 * [Информация о процессах](#processes)
-([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof), [pidstat](#pidstat), [ps](#ps), [top](#top), [atop](#atop), [htop](#htop))
+([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof), [pidstat](#pidstat), [/proc/{PID}](#proc), [ps](#ps), [top](#top), [atop](#atop), [htop](#htop))
 * [Системные и библиотечные вызовы](#syscalls)
 ([strace](#strace), [ltrace](#ltrace), [dtruss](#dtruss))
 * [Профилирование](#profiling)
@@ -84,6 +84,152 @@ Linux 5.4.0-29-generic (vera) 	09/28/20 	_x86_64_	(1 CPU)
 ^C
 Average:     1000   1062829    1.50    0.30    0.00    0.10    1.80     -  python3
 ```
+
+<a name="proc"></a>
+### /proc/{PID} [^](#index "к оглавлению")
+Информация о нашем процессе есть в файловой системе `/proc`.
+```console
+vera@vera$ ls /proc/1064829
+arch_status      environ    mountinfo      personality   statm
+attr             exe        mounts         projid_map    status
+autogroup        fd         mountstats     root          syscall
+auxv             fdinfo     net            sched         task
+cgroup           gid_map    ns             schedstat     timers
+clear_refs       io         numa_maps      sessionid     timerslack_ns
+cmdline          limits     oom_adj        setgroups     uid_map
+comm             loginuid   oom_score      smaps         wchan
+coredump_filter  map_files  oom_score_adj  smaps_rollup
+cpuset           maps       pagemap        stack
+cwd              mem        patch_state    stat
+```
+Рассмотрим несколько примеров. 
+
+* `status` - состояние процесса, pid, threads, parent pid (в данном случае 1 - наше приложение запустил `systemd`) и менее полезное.
+
+```console
+vera@vera:/var/www/sanc$ cat /proc/1052829/status
+Name:	python3
+Umask:	0022
+State:	S (sleeping)
+Tgid:	1062829
+Ngid:	0
+Pid:	1062829
+PPid:	1
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	128
+Groups:	27 1000 
+NStgid:	1062829
+NSpid:	1062829
+NSpgid:	1062829
+NSsid:	1062829
+VmPeak:	  602668 kB
+VmSize:	  595456 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   55208 kB
+VmRSS:	   50860 kB
+RssAnon:	   40780 kB
+RssFile:	   10080 kB
+RssShmem:	       0 kB
+VmData:	  102560 kB
+VmStk:	     132 kB
+VmExe:	    2748 kB
+VmLib:	    8636 kB
+VmPTE:	     248 kB
+VmSwap:	    1888 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	8
+SigQ:	0/3704
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000001001000
+SigCgt:	0000000180000002
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	1
+Cpus_allowed_list:	0
+Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	33202
+nonvoluntary_ctxt_switches:	26807
+```
+* `cmdline` - с помощью какой команды запустили приложение.
+
+```console
+vera@vera:/var/www/sanc$ cat /proc/1052829/cmdline
+python3 app.py 
+```
+
+* `environ` - переменные окружения
+
+```console
+vera@vera$ cat /proc/1062829/environ
+LANG=en_US
+LANGUAGE=en_US:PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin 
+HOME=/home/vera
+LOGNAME=vera
+USER=vera
+SHELL=/bin/bash
+INVOCATION_ID=27ef139db22547854d5ab59628c06c46
+JOURNAL_STREAM=9:13613408
+```
+
+* `fd` - директория с файловыми дескрипторами
+
+```console
+vera@vera$ ls -l /proc/1052829/fd
+lr-x------ 1 vera vera 64 Sep 29 05:55 0 -> /dev/null
+lrwx------ 1 vera vera 64 Sep 29 05:55 1 -> 'socket:[13612408]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 10 -> 'socket:[13621455]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 11 -> 'socket:[13621465]'
+lr-x------ 1 vera vera 64 Sep 29 05:55 12 -> /dev/null
+lrwx------ 1 vera vera 64 Sep 29 05:55 14 -> 'socket:[13611489]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 15 -> 'socket:[13621494]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 2 -> 'socket:[12612408]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 3 -> 'anon_inode:[eventpoll]'
+lr-x------ 1 vera vera 64 Sep 29 05:55 4 -> 'pipe:[13621452]'
+l-wx------ 1 vera vera 64 Sep 29 05:55 5 -> 'pipe:[13621452]'
+lr-x------ 1 vera vera 64 Sep 29 05:55 6 -> 'pipe:[13621453]'
+l-wx------ 1 vera vera 64 Sep 29 05:55 7 -> 'pipe:[13621453]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 8 -> 'anon_inode:[eventfd]'
+lrwx------ 1 vera vera 64 Sep 29 05:55 9 -> 'socket:[13611454]'
+```
+
+* `limits` - лимиты процесса
+
+```console
+vera@vera$ cat /proc/1052829/limits
+Limit                     Soft Limit           Hard Limit           Units     
+Max cpu time              unlimited            unlimited            seconds   
+Max file size             unlimited            unlimited            bytes     
+Max data size             unlimited            unlimited            bytes     
+Max stack size            8388608              unlimited            bytes     
+Max core file size        0                    unlimited            bytes     
+Max resident set          unlimited            unlimited            bytes     
+Max processes             3704                 3704                 processes 
+Max open files            1024                 524288               files     
+Max locked memory         65536                65536                bytes     
+Max address space         unlimited            unlimited            bytes     
+Max file locks            unlimited            unlimited            locks     
+Max pending signals       3704                 3704                 signals   
+Max msgqueue size         819200               819200               bytes     
+Max nice priority         0                    0                    
+Max realtime priority     0                    0                    
+Max realtime timeout      unlimited            unlimited            us        
+```
+
+Подробнее расскажет `man proc`.
 
 <a name="ps"></a>
 ### ps [^](#index "к оглавлению")
