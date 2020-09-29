@@ -269,12 +269,17 @@ vera     1155100  0.0  0.0  11076   676 pts/1    S+   20:14   0:00 grep --color=
 <a name="top"></a>
 ### top [^](#index "к оглавлению")
 
+![top](./images/top.png)
+
 <a name="atop"></a>
 ### atop [^](#index "к оглавлению")
+
+![atop](./images/atop.png)
 
 <a name="htop"></a>
 ### htop [^](#index "к оглавлению")
 
+![htop](./images/htop.png)
 
 
 <a name="misc"></a>
@@ -378,6 +383,9 @@ kevent(0x11, 0x700003EE40D8, 0x1)		 = 0 0
 ### perf [^](#index "к оглавлению")
 Потрясающая многофункциональная тулза с низким оверхедом. Работает в нескольких режимах.
 * `perf top` - показывает **функции**, наиболее затратные по CPU, в отличие от `top`, который показывает затратные **программы**. Функции могут быть из разных программ (например, одна из python-приложения, вторая - nodejs-приложение, а третья относится к БД), также здесь отображаются системные вызовы.
+
+![perf_report](./images/perf_report.png)
+
 ```console
 vera@vera$ sudo perf top
 Overhead  Shared Object                              Symbol
@@ -473,6 +481,8 @@ app.py  out.perf  perf.data  perf.data.old
 Популярный семплирующий профилировщик https://github.com/benfred/py-spy, написанный на Rust, пришел на смену pyflamegraph от Uber, который не работает с питоном 3.7 и больше не поддерживается. Очень низкий оверхед. Частоту снятия семплов можно задать.
 Устанавливается через `pip3 install py-spy`. Работает в нескольких режимах, как и предыдущий профилировщик.
 * ``
+
+![py_spy_top](./images/py_spy_top.png)
 
 <a name="ebpf"></a>
 ## eBPF [^](#index "к оглавлению")
