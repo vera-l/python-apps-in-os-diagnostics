@@ -552,6 +552,7 @@ Overhead  Command  Shared Object                              Symbol
 > Для интерпретируемых языков (python, ruby, php) в отчете будут функции интерпретатора. Это не так полезно, как выполняемые функции для компилируемых языков вроде C, C++, Go и Rust, однако и тут иногда можно извлечь полезную информацию. Для языков с JIT-компиляцией отображение выполняемых функций можно сделать с помощью маппинга (для ноды флагом `node --perf-basic-prof script.js`, для java с помошью https://github.com/jvm-profiling-tools/perf-map-agent).
 
 * `perf annotate` - также строит отчет по файлу `perf.data`, но отображает ассемблерный код. В такой же отчет можно перейти из отчета `perf report`, если нажать клавишу `a` на одной из его строк.
+
 ```console
 vera@vera$ sudo perf annotate
 _PyEval_EvalFrameDefault  /usr/bin/python3.8 [Percent: local period]
@@ -599,13 +600,70 @@ app.py  out.perf  perf.data  perf.data.old
 ### py-spy [^](#index "к оглавлению")
 Популярный семплирующий профилировщик https://github.com/benfred/py-spy, написанный на Rust, пришел на смену pyflamegraph от Uber, который не работает с питоном 3.7 и больше не поддерживается. Очень низкий оверхед. Частоту снятия семплов можно задать.
 Устанавливается через `pip3 install py-spy`. Работает в нескольких режимах, как и предыдущий профилировщик.
-* ``
+
+* `top` - аналогично программе `top`, показывает список функций, выполняющихся наиболее долго. Имеются опции: `--rate 100` - сколько семплов делать в секунду, `--subprocesses` - учитывать также подпроцессы, `--native` - учитывать также C и  С++ функции, `--nonblocking` - меньше влияет на производительность приложения в момент работы, но и менее точно.
 
 ![py_spy_top](./images/py_spy_top.png)
 
-<a name="ebpf"></a>
-## eBPF [^](#index "к оглавлению")
+```console
+vera@vera$ sudo ~/.local/bin/py-spy top --pid 1052829
 
+Collecting samples from 'python3 app.py' (python v3.8.2)
+Total Samples 2100
+GIL: 0.00%, Active: 0.00%, Threads: 4
+
+  %Own   %Total  OwnTime  TotalTime  Function (filename:line)                                             
+  0.00%   0.00%   0.080s    0.080s   _run (pymongo/periodic_executor.py:140)
+  0.00%   0.00%   0.040s    0.040s   _worker (concurrent/futures/thread.py:78)
+  0.00%   0.00%   0.040s    0.090s   <module> (app.py:61)
+  0.00%   0.00%   0.020s    0.020s   raw_decode (json/decoder.py:353)
+  0.00%   0.00%   0.010s    0.010s   authority_info (rfc3986/_mixin.py:42)
+  0.00%   0.00%   0.010s    0.010s   do_handshake (ssl.py:944)
+  0.00%   0.00%   0.010s    0.010s   decode (httpx/decoders.py:81)
+```
+
+* `record` - записывает результаты семплирования в файл, можно получить флейм-диаграмму. Интересные опции: `--output file.svg` - в какой файл записать, `--format flamegraph` - формат записи (flamegraph, raw или speedscope), `--duration` - сколько секунд записывать (по умолчанию - до нажатия ^c), `--function` - агрегировать по имени функции, а не по номеру строки.
+
+```console
+vera@vera$ sudo ~/.local/bin/py-spy record -o profile.svg --pid 1052829
+py-spy> Sampling process 100 times a second. Press Control-C to exit.
+
+^C
+py-spy> Stopped sampling because Control-C pressed
+py-spy> Wrote flamegraph data to 'profile.svg'. Samples: 2643 Errors: 0
+```
+
+* `dump` - показывает стек вызовов **на текущий момент** для каждого потока. С опцией `--locals` напечатает также аргументы
+
+```console
+vera@vera$ sudo ~/.local/bin/py-spy dump --pid 1052829
+Process 1052829: python3 app.py
+Python v3.8.2 (/usr/bin/python3.8)
+
+Thread 1062829 (idle): "MainThread"
+    <module> (app.py:61)
+Thread 1062897 (idle): "ThreadPoolExecutor-0_0"
+    _worker (concurrent/futures/thread.py:78)
+    run (threading.py:870)
+    _bootstrap_inner (threading.py:932)
+    _bootstrap (threading.py:890)
+Thread 1062898 (idle): "pymongo_server_monitor_thread"
+    _run (pymongo/periodic_executor.py:140)
+    run (threading.py:870)
+    _bootstrap_inner (threading.py:932)
+    _bootstrap (threading.py:890)
+Thread 1062901 (idle): "pymongo_kill_cursors_thread"
+    _run (pymongo/periodic_executor.py:140)
+    run (threading.py:870)
+    _bootstrap_inner (threading.py:932)
+    _bootstrap (threading.py:890)
+
+```
+
+<a name="ebpf"></a>
+## Утилиты, основанные на BPF [^](#index "к оглавлению")
+
+BPF — это подсистема ядра Linux, дающая возможность писать небольшие программы, которые будут запущены ядром в ответ на события. Например, такие:
 
 ```
 ...
