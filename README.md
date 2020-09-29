@@ -632,9 +632,9 @@ py-spy> Sampling process 100 times a second. Press Control-C to exit.
 py-spy> Stopped sampling because Control-C pressed
 py-spy> Wrote flamegraph data to 'profile.svg'. Samples: 2643 Errors: 0
 ```
-Получившаяся диаграмма
+Получившаяся диаграмма (можно [открыть](https://github.com/vera-l/python-apps-in-os-diagnostics/blob/master/images/py_spy_flame.png) в отдельном окне и покликать). На нашем тестовом приложении интересного мало, но во многих компаниях для оценки качества релизов такие диаграммы сравнивают с неким нормальным состоянием.
 
-![top](./images/py_spy_flame.png)
+![top](./images/py_spy_flame.svg)
 
 * `dump` - показывает стек вызовов **на текущий момент** для каждого потока. С опцией `--locals` напечатает также аргументы
 
