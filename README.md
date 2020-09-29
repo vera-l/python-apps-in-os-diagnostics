@@ -3,6 +3,8 @@
 <a name="index"></a>
 * [Информация о процессах](#processes)
 ([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof), [pidstat](#pidstat), [/proc/{PID}](#proc), [ps](#ps), [top](#top), [atop](#atop), [htop](#htop))
+* [Файлы, сеть](#misc)
+([lsof](#lsof), [netstat](#netstat))
 * [Системные и библиотечные вызовы](#syscalls)
 ([strace](#strace), [ltrace](#ltrace), [dtruss](#dtruss))
 * [Профилирование](#profiling)
@@ -69,20 +71,20 @@ vera     1062859  0.0  4.8 545896 48272 ?        Ssl  13:22   0:07 python3 app.p
 ### pidstat [^](#index "к оглавлению")
 Статистика по процессам. Добавим `-p <PID> 1` - по процессу с pid каждую секунду. На 2-7 секундах подавалась нагрузка.
 ```console
-vera@vera$ pidstat -p 1062829 1
+vera@vera$ pidstat -p 1052829 1
 Linux 5.4.0-29-generic (vera) 	09/28/20 	_x86_64_	(1 CPU)
 
 14:52:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
-14:52:32     1000   1062829    0.00    0.00    0.00    0.00    0.00     0  python3
-14:52:33     1000   1062829    2.00    1.00    0.00    0.00    3.00     0  python3
-14:52:34     1000   1062829    3.00    0.00    0.00    0.00    3.00     0  python3
-14:52:35     1000   1062829    3.00    1.00    0.00    1.00    4.00     0  python3
-14:52:36     1000   1062829    3.00    0.00    0.00    0.00    3.00     0  python3
-14:52:37     1000   1062829    4.00    0.00    0.00    0.00    4.00     0  python3
-14:52:38     1000   1062829    0.00    0.00    0.00    0.00    0.00     0  python3
-14:52:39     1000   1062829    0.00    1.00    0.00    0.00    1.00     0  python3
+14:52:32     1000   1052829    0.00    0.00    0.00    0.00    0.00     0  python3
+14:52:33     1000   1052829    2.00    1.00    0.00    0.00    3.00     0  python3
+14:52:34     1000   1052829    3.00    0.00    0.00    0.00    3.00     0  python3
+14:52:35     1000   1052829    3.00    1.00    0.00    1.00    4.00     0  python3
+14:52:36     1000   1052829    3.00    0.00    0.00    0.00    3.00     0  python3
+14:52:37     1000   1052829    4.00    0.00    0.00    0.00    4.00     0  python3
+14:52:38     1000   1052829    0.00    0.00    0.00    0.00    0.00     0  python3
+14:52:39     1000   1052829    0.00    1.00    0.00    0.00    1.00     0  python3
 ^C
-Average:     1000   1062829    1.50    0.30    0.00    0.10    1.80     -  python3
+Average:     1000   1052829    1.50    0.30    0.00    0.10    1.80     -  python3
 ```
 
 <a name="proc"></a>
@@ -167,14 +169,14 @@ nonvoluntary_ctxt_switches:	26807
 * `cmdline` - с помощью какой команды запустили приложение.
 
 ```console
-vera@vera:/var/www/sanc$ cat /proc/1052829/cmdline
+vera@vera$ cat /proc/1052829/cmdline
 python3 app.py 
 ```
 
 * `environ` - переменные окружения
 
 ```console
-vera@vera$ cat /proc/1062829/environ
+vera@vera$ cat /proc/1052829/environ
 LANG=en_US
 LANGUAGE=en_US:PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin 
 HOME=/home/vera
@@ -274,6 +276,15 @@ vera     1155100  0.0  0.0  11076   676 pts/1    S+   20:14   0:00 grep --color=
 ### htop [^](#index "к оглавлению")
 
 
+
+<a name="misc"></a>
+## Файлы, сеть [^](#index "к оглавлению")
+
+<a name="lsof"></a>
+### lsof [^](#index "к оглавлению")
+
+<a name="netstat"></a>
+### netstat [^](#index "к оглавлению")
 
 <a name="syscalls"></a>
 ## Системные и библиотечные вызовы [^](#index "к оглавлению")
