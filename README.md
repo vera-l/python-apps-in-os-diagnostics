@@ -16,7 +16,7 @@
 <a name="processes"></a>
 ## Информация о процессах [^](#index "к оглавлению")
 
-Узнаем о состоянии процесса и всей системы при помощи нескольких утилит. Для проведения диагностики нам понадобится узнать pid процесса. Также, в системе могут присутствовать и другие приложения, которые могут оказывать влияние на наше. Для каждой программы подробная справка с дополнительными опциями доступна по `man <name>`
+Узнаем о состоянии процесса и всей системы при помощи нескольких утилит. Для проведения диагностики нам понадобится узнать pid процесса. В системе также присутствуют и другие приложения, которые могут оказывать влияние на наше. Для каждой программы подробная справка с дополнительными опциями доступна по `man <name>`
 
 <a name="pstree"></a>
 ### pstree [^](#index "к оглавлению")
@@ -293,8 +293,120 @@ vera     1155100  0.0  0.0  11076   676 pts/1    S+   20:14   0:00 grep --color=
 <a name="lsof"></a>
 ### lsof [^](#index "к оглавлению")
 
+Выводит список открытых файлов (точнее, что в linux понимается под этим - файлы, сетевые соединения и т.д.). Имеет множество флагов и применений. Также, поддерживается исключение из результатов с помощью `^`, например, `-c^python2.7` - показать все файлы, которые были открыты пограммами, кроме `python2.7`. Еще несколько применений:
+
+Так можно вывести список открытых процессом файлов:
+
+```console
+vera@vera$ sudo lsof -p 1062829
+sudo: unable to resolve host vera: Name or service not known
+[sudo] password for vera: 
+COMMAND     PID USER   FD      TYPE             DEVICE SIZE/OFF     NODE NAME
+python3 1052829 vera  txt       REG              252,2  5453504    28359 /usr/bin/python3.8
+python3 1052829 vera  mem       REG              252,2   101320    27111 /usr/lib/x86_64-linux-gnu/libresolv-2.31.so
+python3 1052829 vera  mem       REG              252,2    51832    27055 /usr/lib/x86_64-linux-gnu/libnss_files-2.31.so
+python3 1052829 vera  mem       REG              252,2   860688   258277 /usr/lib/python3/dist-packages/cryptography/hazmat/bindings/_openssl.abi3.so
+python3 1052829 vera  mem       REG              252,2    43416    26737 /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+python3 1052829 vera  mem       REG              252,2   186288     8420 /usr/lib/python3/dist-packages/_cffi_backend.cpython-38-x86_64-linux-gnu.so
+python3 1052829 vera  mem       REG              252,2   372408   268275 /home/vera/.local/lib/python3.8/site-packages/bson/_cbson.cpython-38-x86_64-linux-gnu.so
+...
+python3 1052829 vera  mem       REG              252,2  2029224    28103 /usr/lib/x86_64-linux-gnu/libc-2.31.so
+python3 1052829 vera  mem       REG              252,2    27002    26905 /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+python3 1052829 vera  mem       REG              252,2   191472    27127 /usr/lib/x86_64-linux-gnu/ld-2.31.so
+python3 1052829 vera    0r      CHR                1,3      0t0        6 /dev/null
+python3 1052829 vera    1u     unix 0xffff9c11b8dffc00      0t0 13611408 type=STREAM
+python3 1052829 vera    2u     unix 0xffff9c11b8dffc00      0t0 13611408 type=STREAM
+python3 1052829 vera    3u  a_inode               0,14        0    10376 [eventpoll]
+python3 1052829 vera    4r     FIFO               0,13      0t0 13611452 pipe
+python3 1052829 vera    5w     FIFO               0,13      0t0 13611452 pipe
+python3 1052829 vera    6r     FIFO               0,13      0t0 13611453 pipe
+python3 1052829 vera    7w     FIFO               0,13      0t0 13611453 pipe
+python3 1052829 vera    8u  a_inode               0,14        0    10376 [eventfd]
+python3 1052829 vera    9u     unix 0xffff9c1186a12800      0t0 13611454 type=STREAM
+python3 1052829 vera   10u     unix 0xffff9c1186a12000      0t0 13611455 type=STREAM
+python3 1052829 vera   11u     IPv4           13611465      0t0      TCP *:135 (LISTEN)
+python3 1052829 vera   12r      CHR                1,3      0t0        6 /dev/null
+python3 1052829 vera   14u     IPv4           13611489      0t0      TCP localhost:31706->localhost:27017 (ESTABLISHED)
+python3 1052829 vera   15u     IPv4           13611494      0t0      TCP localhost:31708->localhost:27017 (ESTABLISHED)
+```
+
+А так можно вывести список процессов, которые открыли какой-то определенный файл:
+
+```console
+vera@vera$ sudo lsof /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+sudo: unable to resolve host vera: Name or service not known
+COMMAND     PID     USER  FD   TYPE DEVICE SIZE/OFF  NODE NAME
+glances  421367     root mem    REG  252,2   598104 28124 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+nginx    629640     root mem    REG  252,2   598104 28124 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+nginx    629641 www-data mem    REG  252,2   598104 28124 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+python3 1052829     vera mem    REG  252,2   598104 28124 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+mongod  2222783  mongodb mem    REG  252,2   598104 28124 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+```
+
+Список окрытых портов TCP:
+
+```console
+vera@vera:/var/www/sanc$ sudo lsof -i tcp
+COMMAND       PID            USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+glances    427367            root    4u  IPv4  5853933      0t0  TCP localhost:62209 (LISTEN)
+agent      668793        dd-agent    6u  IPv4  1062091      0t0  TCP localhost:6000 (LISTEN)
+agent      668793        dd-agent    7u  IPv4  1062193      0t0  TCP localhost:6001 (LISTEN)
+agent      668793        dd-agent    9u  IPv4  1062205      0t0  TCP localhost:48642->localhost:6001 (ESTABLISHED)
+agent      668793        dd-agent   12u  IPv4  1062206      0t0  TCP localhost:6001->localhost:48642 (ESTABLISHED)
+process-a  668794        dd-agent    7u  IPv4  1062183      0t0  TCP localhost:6062 (LISTEN)
+trace-age  668795        dd-agent    6u  IPv4  1062171      0t0  TCP localhost:7126 (LISTEN)
+nginx      669640            root    6u  IPv4  1063961      0t0  TCP *:http (LISTEN)
+nginx      669640            root    7u  IPv6  1063962      0t0  TCP *:http (LISTEN)
+nginx      669640            root    8u  IPv6  1063963      0t0  TCP *:https (LISTEN)
+nginx      669640            root    9u  IPv4  1063964      0t0  TCP *:https (LISTEN)
+nginx      669640            root   10u  IPv4  1063965      0t0  TCP *:71 (LISTEN)
+nginx      669641        www-data    6u  IPv4  1063961      0t0  TCP *:http (LISTEN)
+nginx      669641        www-data    7u  IPv6  1063962      0t0  TCP *:http (LISTEN)
+nginx      669641        www-data    8u  IPv6  1063963      0t0  TCP *:https (LISTEN)
+nginx      669641        www-data    9u  IPv4  1063964      0t0  TCP *:https (LISTEN)
+nginx      669641        www-data   10u  IPv4  1063965      0t0  TCP *:71 (LISTEN)
+python3   1062829            vera   11u  IPv4 13611465      0t0  TCP *:135 (LISTEN)
+python3   1062829            vera   14u  IPv4 13611489      0t0  TCP localhost:39706->localhost:28017 (ESTABLISHED)
+python3   1062829            vera   15u  IPv4 13611494      0t0  TCP localhost:39708->localhost:28017 (ESTABLISHED)
+mongod    2282783         mongodb   11u  IPv4  9084195      0t0  TCP localhost:28017 (LISTEN)
+mongod    2282783         mongodb   31u  IPv4 13611490      0t0  TCP localhost:28017->localhost:39706 (ESTABLISHED)
+mongod    2282783         mongodb   34u  IPv4 13611495      0t0  TCP localhost:28017->localhost:39708 (ESTABLISHED)
+
+```
+
+Вывести, какой процесс использует определенный порт:
+
+```console
+vera@vera:/var/www/sanc$ sudo lsof -i :135
+COMMAND     PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+python3 1052829 vera   11u  IPv4 13611465      0t0  TCP *:135 (LISTEN)
+```
+
+Кейсы: посмотреть, почему лог пустой, или кто пишет в какой-то лог; проверить, какой процесс прослушивает данный порт или наоборот.
+
 <a name="netstat"></a>
-### netstat [^](#index "к оглавлению")
+### netstat (🐧 only) [^](#index "к оглавлению")
+
+Выводит список TCP соединений с протоколами, адресами, портами, состоямиями соединений. Имеет множество флагов.
+Например, так можно вывести список только прослушивающихся TCP портов с выводом pid и имен программ без замены портов на символьный код.
+
+```console
+vera@vera:/var/www/sanc$ sudo netstat -nltp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      679640/nginx: maste 
+tcp        0      0 0.0.0.0:81              0.0.0.0:*               LISTEN      679640/nginx: maste 
+tcp        0      0 0.0.0.0:1845            0.0.0.0:*               LISTEN      1052829/python3     
+tcp        0      0 127.0.0.1:62209         0.0.0.0:*               LISTEN      427367/python3      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      669640/nginx: maste 
+tcp        0      0 127.0.0.1:8126          0.0.0.0:*               LISTEN      668795/trace-agent  
+tcp        0      0 127.0.0.1:5000          0.0.0.0:*               LISTEN      668793/agent        
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      2282783/mongod      
+tcp        0      0 127.0.0.1:5001          0.0.0.0:*               LISTEN      668793/agent        
+tcp        0      0 127.0.0.1:6062          0.0.0.0:*               LISTEN      668794/process-agen 
+tcp6       0      0 :::80                   :::*                    LISTEN      669640/nginx: maste 
+tcp6       0      0 :::443                  :::*                    LISTEN      669640/nginx: maste 
+```
 
 <a name="syscalls"></a>
 ## Системные и библиотечные вызовы [^](#index "к оглавлению")
