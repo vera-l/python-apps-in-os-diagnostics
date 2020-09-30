@@ -573,7 +573,7 @@ Percent│        mov        %r10,%rdx
   0.07 │     │↓ jne        8698
 ```
 
-* `perf script` - 
+* `perf script` - подготавливает данные из `perf.data` для последующего анализа.
 ```console
 vera@vera$ sudo perf script
 python3 1062829 2884422.486217:     250000 cpu-clock:pppH:      7f630b435e0b [unknown] (/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1)
@@ -589,11 +589,49 @@ python3 1062829 2884422.488478:     250000 cpu-clock:pppH:            5025b1 [un
 python3 1062829 2884422.488714:     250000 cpu-clock:pppH:            5a595c [unknown] (/usr/bin/python3.8)
 python3 1062829 2884422.488966:     250000 cpu-clock:pppH:            56729f _PyEval_EvalFrameDefault+0x2ff (/usr/bin/python3.8)
 ```
-Обычно используется для построения флейм-диаграмм - популярного средства для обнаружения проблем, придуманного Бренданом Греггом (https://github.com/brendangregg/FlameGraph).
+Обычно используется для построения флейм-диаграмм - популярного средства для обнаружения проблем, придуманного Бренданом Греггом (https://github.com/brendangregg/FlameGraph). Кстати, для посмтроения таких диаграмм для мака используется не `perf`, а `dtrace` - вывод программы также предварительно обрабатывается скриптом.
 ```console
-vera@vera$ sudo perf script > out.perf
-vera@vera$ ls
-app.py  out.perf  perf.data  perf.data.old
+vera@vera$ git clone https://github.com/brendangregg/FlameGraph
+vera@vera$ cd FlameGraph
+vera@vera$ sudo perf record -F 99 -p 1052829 -g -- sleep 60
+vera@vera$ sudo perf script | ./stackcollapse-perf.pl | ./flamegraph.pl > graph.svg
+```
+Получается такая диаграмма
+
+Опять же, для питона здесь отображаются функции интерпретатора, и это мало полезно в большинстве случаев.
+
+Для других языков вывод `perf script` обычно дополнительно обрабатывают, фильтруют чтобы получать более читаемые диаграммы (например, для [ноды](https://nodejs.org/en/docs/guides/diagnostics-flamegraph/)).
+
+Есть также интересная тулза Flamescope от Netflix (https://github.com/Netflix/flamescope)
+
+* `perf trace` - отображает системные вызовы и другие события. В отличие от `strace` имеет низкий оверхед, можно применять на проде.
+
+```console
+vera@vera:~$ sudo perf trace --pid 1052829
+    ? (         ): python3/1062829  ... [continued]: epoll_wait())                                       = 1
+0.045 ( 0.026 ms): python3/1062829 read(fd: 16<socket:[14137286]>, buf: 0x2193000, count: 262144)        = 4164
+0.222 ( 0.005 ms): python3/1062829 epoll_wait(epfd: 3<anon_inode:[eventpoll]>, events: 0x7ffd7fd12ff0, maxevents: 1024, timeout: 4833) = 1
+0.233 ( 0.005 ms): python3/1062829 read(fd: 16<socket:[14137286]>, buf: 0x2193000, count: 262144)        = 3315
+0.432 ( 0.013 ms): python3/1062829 stat(filename: 0x5a1c800, statbuf: 0x7ffd7fd11b70)                    = 0
+0.466 ( 0.008 ms): python3/1062829 stat(filename: 0x59cddc0, statbuf: 0x7ffd7fd11b70)                    = 0
+0.546 ( 0.006 ms): python3/1062829 stat(filename: 0x5a1c800, statbuf: 0x7ffd7fd15200)                    = 0
+0.587 ( 0.006 ms): python3/1062829 epoll_wait(epfd: 3<anon_inode:[eventpoll]>, events: 0x7ffd7fd12ff0, maxevents: 1024) = 0
+0.636 ( 0.006 ms): python3/1062829 stat(filename: 0x5a1c200, statbuf: 0x7ffd7fd14f70)                    = 0
+0.654 ( 0.005 ms): python3/1062829 stat(filename: 0x59cd1e0, statbuf: 0x7ffd7fd14f70)                    = 0
+0.675 ( 0.003 ms): python3/1062829 epoll_wait(epfd: 3<anon_inode:[eventpoll]>, events: 0x7ffd7fd12ff0, maxevents: 1024) = 0
+2.205 ( 0.004 ms): python3/1062829 getpid()                                                              = 1062829
+```
+
+* `perf stat` - подсчет количества системных событий (список доступен по `perf list`). Например, ниже приведен подсчет количества переключений контекста между userspace и kernelspace для нашего процесса.
+
+```console
+vera@vera$ sudo perf stat -e context-switches -p 1052829
+^C
+ Performance counter stats for process id '1052829':
+
+              1735      context-switches                                            
+
+      10.490784464 seconds time elapsed
 ```
 
 <a name="py-spy"></a>
@@ -601,7 +639,7 @@ app.py  out.perf  perf.data  perf.data.old
 Популярный семплирующий профилировщик https://github.com/benfred/py-spy, написанный на Rust, пришел на смену pyflamegraph от Uber, который не работает с питоном 3.7 и больше не поддерживается. В отличие от `perf` отображает вызовы python-фукнций, а не функций интерпретатора. Низкий оверхед. Частоту снятия семплов можно задать.
 Устанавливается через `pip3 install py-spy`. Работает в нескольких режимах, как и предыдущий профилировщик.
 
-* `top` - аналогично программе `top`, показывает список функций, выполняющихся наиболее долго. Имеются опции: `--rate 100` - сколько семплов делать в секунду, `--subprocesses` - учитывать также подпроцессы, `--native` - учитывать также C и  С++ функции, `--nonblocking` - меньше влияет на производительность приложения в момент работы, но и менее точно.
+* `py-spy top` - аналогично программе `top`, показывает список функций, выполняющихся наиболее долго. Имеются опции: `--rate 100` - сколько семплов делать в секунду, `--subprocesses` - учитывать также подпроцессы, `--native` - учитывать также C и  С++ функции, `--nonblocking` - меньше влияет на производительность приложения в момент работы, но и менее точно.
 
 ![py_spy_top](./images/py_spy_top.png)
 
@@ -622,7 +660,7 @@ GIL: 0.00%, Active: 0.00%, Threads: 4
   0.00%   0.00%   0.010s    0.010s   decode (httpx/decoders.py:81)
 ```
 
-* `record` - записывает результаты семплирования в файл, можно получить флейм-диаграмму. Интересные опции: `--output file.svg` - в какой файл записать, `--format flamegraph` - формат записи (flamegraph, raw или speedscope), `--duration` - сколько секунд записывать (по умолчанию - до нажатия ^c), `--function` - агрегировать по имени функции, а не по номеру строки.
+* `py-spy record` - записывает результаты семплирования в файл, можно получить флейм-диаграмму. Интересные опции: `--output file.svg` - в какой файл записать, `--format flamegraph` - формат записи (flamegraph, raw или speedscope), `--duration` - сколько секунд записывать (по умолчанию - до нажатия ^c), `--function` - агрегировать по имени функции, а не по номеру строки.
 
 ```console
 vera@vera$ sudo ~/.local/bin/py-spy record -o profile.svg --pid 1052829
@@ -636,7 +674,7 @@ py-spy> Wrote flamegraph data to 'profile.svg'. Samples: 2643 Errors: 0
 
 ![top](./images/py_spy_flame.svg)
 
-* `dump` - показывает стек вызовов **на текущий момент** для каждого потока. С опцией `--locals` напечатает также аргументы
+* `py-spy dump` - показывает стек вызовов **на текущий момент** для каждого потока. С опцией `--locals` напечатает также аргументы
 
 ```console
 vera@vera$ sudo ~/.local/bin/py-spy dump --pid 1052829
