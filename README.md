@@ -592,6 +592,7 @@ python3 1062829 2884422.488714:     250000 cpu-clock:pppH:            5a595c [un
 python3 1062829 2884422.488966:     250000 cpu-clock:pppH:            56729f _PyEval_EvalFrameDefault+0x2ff (/usr/bin/python3.8)
 ```
 Обычно используется для построения флейм-диаграмм - популярного средства для обнаружения проблем, придуманного Бренданом Греггом (https://github.com/brendangregg/FlameGraph). Кстати, для построения таких диаграмм для мака используется не `perf`, а `dtrace` - вывод программы также предварительно обрабатывается скриптом.
+
 ```console
 vera@vera$ git clone https://github.com/brendangregg/FlameGraph
 vera@vera$ cd FlameGraph
@@ -599,12 +600,14 @@ vera@vera$ sudo perf record -F 99 -p 1052829 -g -- sleep 60
 vera@vera$ sudo perf script | ./stackcollapse-perf.pl | ./flamegraph.pl > graph.svg
 ```
 Получается такая диаграмма (можно [открыть](https://raw.githubusercontent.com/vera-l/python-apps-in-os-diagnostics/master/images/perf_flamegraph.svg) в новом окне и покликать)
+
 ![perf_report](./images/perf_flamegraph.svg)
+
 Опять же, для питона здесь отображаются функции интерпретатора, и это мало полезно в большинстве случаев.
 
 Для других языков вывод `perf script` обычно дополнительно обрабатывают, фильтруют чтобы получать более читаемые диаграммы (например, для [ноды](https://nodejs.org/en/docs/guides/diagnostics-flamegraph/)).
 
-Есть также интересная тулза `Flamescope` от Netflix (https://github.com/Netflix/flamescope), обрабатывает данные, которые записывал perf (или некоторые другие подобные программы) в течение некоторого времени, и представляет результат в виде тепловой карты с разбивкой по времени.
+Есть также интересная тулза `Flamescope` от Netflix (https://github.com/Netflix/flamescope), обрабатывает данные, которые записывал perf (или некоторые другие подобные программы) в течение некоторого времени, и представляет результат в виде тепловой карты с разбивкой по времени. Например, на такой карте можно будет увидеть периодическую работу GC.
 
 ```console
 vera@vera$ sudo perf record -F 49 -a -g -p 1052829 -- sleep 120
