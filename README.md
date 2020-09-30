@@ -735,7 +735,7 @@ eBPF — это подсистема ядра Linux, дающая возможн
 <a name="bpftrace"></a>
 ## bpftrace [^](#index "к оглавлению")
 
-Аналог Dtrace, основана на технологии eBPF. Позволяет писать небольшие программы, которые выполняются каждый раз, когда происходит событие.
+Аналог Dtrace. Позволяет писать небольшие программы, которые выполняются каждый раз, когда происходит событие.
 Примеры: http://www.brendangregg.com/ebpf.html#bpftrace
 Можно так же строить флейм-диаграммы, как и для вывода perf и dtrace (скриптик https://github.com/brendangregg/FlameGraph/blob/master/stackcollapse-bpftrace.pl)
 
@@ -760,7 +760,7 @@ Attaching 1 probe...
 <a name="bpfcc-tools"></a>
 ## bpfcc-tools [^](#index "к оглавлению")
 
-Множество утилит-скриптов под разные задачи. Подробнее http://www.brendangregg.com/ebpf.html#bcc
+Тулкит для написания скриптов и множество готовых утилит-скриптов под разные задачи. Подробнее http://www.brendangregg.com/ebpf.html#bcc
 Список утилит: https://github.com/iovisor/bcc/tree/master/tools
 Для Ubuntu это пакет `bpfcc-tools`, для запуска нужно добавить к имени утилиты `-bpfcc`.
 
