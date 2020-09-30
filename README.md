@@ -725,8 +725,11 @@ Thread 1062901 (idle): "pymongo_kill_cursors_thread"
 
 ```
 
+<a name="tracing"></a>
+## Фреймворки динамической трассировки
+
 <a name="ebpf"></a>
-## Утилиты, основанные на BPF [^](#index "к оглавлению")
+### Утилиты, основанные на BPF [^](#index "к оглавлению")
 
 BPF — это подсистема ядра Linux, дающая возможность писать небольшие программы, которые будут запущены ядром в ответ на события. Например, такие:
 
@@ -879,5 +882,5 @@ my_metrics.send(f'Typical operation has taken {duration_ms} ms')
 
 <a name="resources"></a>
 ## Доп. литература [^](#index "к оглавлению")
-http://www.brendangregg.com/ (все о производительности в linux, обзор утилит и средств)
-https://github.com/vera-l/python-resources#os
+* http://www.brendangregg.com/ (все о производительности в linux, обзор утилит и средств)
+* https://github.com/vera-l/python-resources#os (несколько полезных статей)
