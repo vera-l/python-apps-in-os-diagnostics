@@ -879,4 +879,5 @@ my_metrics.send(f'Typical operation has taken {duration_ms} ms')
 
 <a name="resources"></a>
 ## Доп. литература [^](#index "к оглавлению")
+http://www.brendangregg.com/ (все о производительности в linux, обзор утилит и средств)
 https://github.com/vera-l/python-resources#os
