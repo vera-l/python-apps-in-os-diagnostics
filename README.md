@@ -884,7 +884,28 @@ if delta >= options.asyncio_task_threshold_sec:
 
 <a name="gc"></a>
 ### Работа GC (garbache collector) [^](#index "к оглавлению")
-https://docs.python.org/3/library/gc.html
+
+С помощью стандартного модуля `gc` https://docs.python.org/3/library/gc.html мы можем узнать о работе сборщика мусора и периодически собирать и отправлять эту информацию.
+
+```python
+import time
+import gc
+
+start = None
+duration = 0
+count = 0
+
+def gc_metrics_collector(phase, info):
+    if phase == 'start':
+        start = time.time()
+    elif phase == 'stop' and start is not None:
+        duration += time.time() - start
+        count += 1
+
+gc.callbacks.append(gc_metrics_collector)
+
+# ... периодически отправляем, а затем обнуляем статистику
+```
 
 
 <a name="gc"></a>
