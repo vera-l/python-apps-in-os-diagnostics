@@ -12,7 +12,7 @@
 * [Динамическая трассировка](#tracing)
 ([bpftrace](#bpftrace), [bpfcc-tools](#bpfcc-tools))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
-([timings](#timings), [slow_callbacks](#ioloop_blocks), [gc](#gc), [tracemalloc](#tracemalloc))
+([timings](#timings), [slow callbacks](#ioloop_blocks), [gc](#gc), [tracemalloc](#tracemalloc))
 * [Доп. литература](#resources)
 
 <a name="processes"></a>
@@ -910,6 +910,24 @@ gc.callbacks.append(gc_metrics_collector)
 <a name="tracemalloc"></a>
 ### Tracemalloc [^](#index "к оглавлению")
 Для обнаружения утечек памяти можно использовать встроенный модуль `tracemalloc` https://docs.python.org/3/library/tracemalloc.html.
+Оверхед высокий, так что на проде нужно применять с осторожностью.
+
+```python
+import tracemalloc
+
+tracemalloc.start()
+
+# ... зупускаем приложение
+
+snapshot1 = tracemalloc.take_snapshot()
+# ... код с утечкой
+snapshot2 = tracemalloc.take_snapshot()
+
+# ... сравниваем с предыдущим
+top_stats = snapshot2.compare_to(snapshot1, 'lineno')
+
+# ... периодически как-то обрабатываем результат
+```
 
 <a name="resources"></a>
 ## Доп. литература [^](#index "к оглавлению")
