@@ -727,28 +727,10 @@ Thread 1062901 (idle): "pymongo_kill_cursors_thread"
 ```
 
 <a name="tracing"></a>
-## Динамическая трассировка
+## Динамическая трассировка [^](#index "к оглавлению")
 
-BPF — это подсистема ядра Linux, дающая возможность писать небольшие программы, которые будут запущены ядром в ответ на события (быть системный вызов, вызов функции или даже что-то, происходящие внутри таких запросов). Например, такие:
-
-```
-...
-#ifndef LATENCY
-  BPF_HASH(counts, struct method_t, u64);            // number of calls
-  #ifdef SYSCALLS
-    BPF_HASH(syscounts, u64, u64);                   // number of calls per IP
-  #endif  // SYSCALLS
-#else
-  BPF_HASH(times, struct method_t, struct info_t);
-  BPF_HASH(entry, struct entry_t, u64);              // timestamp at entry
-  #ifdef SYSCALLS
-    BPF_HASH(systimes, u64, struct info_t);          // latency per IP
-    BPF_HASH(sysentry, u64, struct syscall_entry_t); // ts + IP at entry
-  #endif  // SYSCALLS
-#endif
-...
-```
-
+eBPF — это подсистема ядра Linux, дающая возможность писать небольшие программы, которые будут запущены ядром в ответ на события (например, системный вызов, вызов функции и др.), это как бы "javascript для ядра". 
+Существует множество инструментов на основе этой технологии, которые позволяют полностью контролировать состояние приложений и системы. Подробее у Брендана Грегга http://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html
 
 <a name="bpftrace"></a>
 ## bpftrace [^](#index "к оглавлению")
@@ -778,8 +760,9 @@ Attaching 1 probe...
 <a name="bpfcc-tools"></a>
 ## bpfcc-tools [^](#index "к оглавлению")
 
-Множество утилит под разные задачи. Подробнее http://www.brendangregg.com/ebpf.html#bcc
+Множество утилит-скриптов под разные задачи. Подробнее http://www.brendangregg.com/ebpf.html#bcc
 Список утилит: https://github.com/iovisor/bcc/tree/master/tools
+Для Ubuntu это пакет `bpfcc-tools`, для запуска нужно добавить к имени утилиты `-bpfcc`.
 
 Вот некоторые их них, которые касаются питона:
 
