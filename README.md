@@ -868,7 +868,7 @@ my_metrics.send(f'Typical operation has taken {duration_ms} ms')
 ```
 
 <a name="ioloop_blocks"></a>
-### Длительные блокировки ioloop
+### Длительные блокировки ioloop [^](#index "к оглавлению")
 
 В tornado до 5 версии был метод `IOLoop.set_blocking_signal_threshold(seconds, action)`, который позволял логировать долго выполняющиеся колбеки (свыше установленного порога).
 Для современных библиотек можно сделать аналогично - написать обертку для раннера и тоже логировать какую-то информацию, например стектрейс.
@@ -883,12 +883,12 @@ if delta >= options.asyncio_task_threshold_sec:
 ```
 
 <a name="gc"></a>
-### Работа GC (garbache collector)
+### Работа GC (garbache collector) [^](#index "к оглавлению")
 https://docs.python.org/3/library/gc.html
 
 
 <a name="gc"></a>
-### Работа GC (garbache collector)
+### Malloc [^](#index "к оглавлению")
 
 <a name="resources"></a>
 ## Доп. литература [^](#index "к оглавлению")
