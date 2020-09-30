@@ -9,6 +9,8 @@
 ([strace](#strace), [ltrace](#ltrace), [dtruss](#dtruss))
 * [Профилирование](#profiling)
 ([perf](#perf), [py-spy](#py-spy))
+* [Фреймворки динамической трассировки](#tracing)
+([eBPF](#ebpf), [Dtrace](#dtrace))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
 ([timings](#timings), [gc](#gc), [locks](#locks))
 * [Доп. литература](#resources)
@@ -865,6 +867,12 @@ duration_ms = (time.time() - self.start) * 1000
 my_metrics.send(f'Typical operation has taken {duration_ms} ms')
 ...
 ```
+
+<a name="ioloop_blocks"></a>
+### Длительные блокировки ioloop
+
+<a name="gc"></a>
+### Работа GC (garbache collector)
 
 <a name="gc"></a>
 ### Работа GC (garbache collector)
