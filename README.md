@@ -12,7 +12,7 @@
 * [Динамическая трассировка](#tracing)
 ([bpftrace](#bpftrace), [bpfcc-tools](#bpfcc-tools))
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
-([timings](#timings), [gc](#gc), [locks](#locks))
+([timings](#timings), [slow_callbacks](#ioloop_blocks), [gc](#gc), [locks](#locks))
 * [Доп. литература](#resources)
 
 <a name="processes"></a>
@@ -870,8 +870,22 @@ my_metrics.send(f'Typical operation has taken {duration_ms} ms')
 <a name="ioloop_blocks"></a>
 ### Длительные блокировки ioloop
 
+В tornado до 5 версии был метод `IOLoop.set_blocking_signal_threshold(seconds, action)`, который позволял логировать долго выполняющиеся колбеки (свыше установленного порога).
+Для современных библиотек можно сделать аналогично - написать обертку для раннера и тоже логировать какую-то информацию, например стектрейс.
+Данную метрику можно отображать на графиках, а по анализу логов выявлять кандидатов для последующей оптимизации.
+
+```python
+start_time = self._loop.time()
+old_run(self)
+delta = self._loop.time() - start_time
+if delta >= options.asyncio_task_threshold_sec:
+    slow_tasks_logger.warning('%s took %.2fms', self, delta * 1000)
+```
+
 <a name="gc"></a>
 ### Работа GC (garbache collector)
+https://docs.python.org/3/library/gc.html
+
 
 <a name="gc"></a>
 ### Работа GC (garbache collector)
