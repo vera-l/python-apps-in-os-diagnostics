@@ -598,8 +598,8 @@ vera@vera$ cd FlameGraph
 vera@vera$ sudo perf record -F 99 -p 1052829 -g -- sleep 60
 vera@vera$ sudo perf script | ./stackcollapse-perf.pl | ./flamegraph.pl > graph.svg
 ```
-Получается такая диаграмма
-![perf_report](./images/perf_flamegraph.png)
+Получается такая диаграмма (можно [открыть](https://raw.githubusercontent.com/vera-l/python-apps-in-os-diagnostics/master/images/perf_flamegraph.svg) в новом окне и покликать)
+![perf_report](./images/perf_flamegraph.svg)
 Опять же, для питона здесь отображаются функции интерпретатора, и это мало полезно в большинстве случаев.
 
 Для других языков вывод `perf script` обычно дополнительно обрабатывают, фильтруют чтобы получать более читаемые диаграммы (например, для [ноды](https://nodejs.org/en/docs/guides/diagnostics-flamegraph/)).
@@ -618,7 +618,9 @@ vera@vera$ python3 flamescope/run.py
 Далее открываем в браузере `http://0.0.0.0:5000` и видим в списке наш снимок `stacks.myproductionapp`, нажимаем "Open as Linux perf".
 
 ![perf_report](./images/flamescope_timeline.png)
+
 Выделив интересующий нас временной интервал, получим для него флейм-диаграмму.
+
 ![perf_report](./images/flamescope_graph.png)
 
 * `perf trace` - отображает системные вызовы и другие события. В отличие от `strace` имеет низкий оверхед, можно применять на проде.
