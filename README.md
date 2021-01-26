@@ -13,6 +13,8 @@
 ([perf](#perf), [py-spy](#py-spy))
 * [Динамическая трассировка](#tracing)
 ([bpftrace](#bpftrace), [bpfcc-tools](#bpfcc-tools))
+* [Отладка](#debug)
+([gdb](#gdb) с маппингами для python)
 * [Сбор метрик из приложения для отображения на графиках](#metrics)
 ([timings](#timings), [slow callbacks](#ioloop_blocks), [gc](#gc), [tracemalloc](#tracemalloc))
 * [Доп. литература](#resources)
@@ -948,6 +950,13 @@ Detaching...
 
 Другие утилиты из пакета https://packages.ubuntu.com/ru/bionic/all/bpfcc-tools/filelist. Дока будет доступна `man ...` после установки пакета для всех утилит. 
 
+
+<a name="debug"></a>
+## Отладка [^](#index "к оглавлению")
+
+<a name="gdb"></a>
+### gdb с маппингами для python [^](#index "к оглавлению")
+GNU Debugger
 
 <a name="metrics"></a>
 ## Сбор метрик из приложения для отображения на графиках [^](#index "к оглавлению")
