@@ -3,7 +3,7 @@
 <a name="index"></a>
 * [Информация о процессах](#processes)
 ([pstree](#pstree), [pgrep](#pgrep), [pidof](#pidof), [pidstat](#pidstat), [/proc/{PID}](#proc), [ps](#ps), [top](#top), [atop](#atop), [htop](#htop))
-* [Файлы, сеть](#misc)
+* [Файлы, сеть](#descr)
 ([lsof](#lsof), [netstat](#netstat), [ss](#ss))
 * [Перехват сетевых пакетов](#misc)
 ([tcpdump](#tcpdump), [tcpflow](#tcpflow))
@@ -296,7 +296,7 @@ vera     1155100  0.0  0.0  11076   676 pts/1    S+   20:14   0:00 grep --color=
 
 ![htop](./images/htop.png)
 
-<a name="misc"></a>
+<a name="descr"></a>
 ## Файлы, сеть [^](#index "к оглавлению")
 
 <a name="lsof"></a>
@@ -439,6 +439,67 @@ ESTAB 0      0           127.0.0.1:27017         127.0.0.1:59826
 ESTAB 0      0           127.0.0.1:27017         127.0.0.1:59824                                        
 ESTAB 0      0           127.0.0.1:27017         127.0.0.1:41902                                        
 ```
+
+<a name="tcp"></a>
+## Перехват сетевых пакетов [^](#index "к оглавлению")
+
+<a name="tcpdump"></a>
+### tcpdump [^](#index "к оглавлению")
+Утилита для мониторинга, захвата и дампа сетевых пакетов. Перехваченные пакеты можно сохранять в файл для последующего анализа с помощью этой же утилиты либо, как вариант, Wireshark. 
+
+Например, следующая команда позволит собрать входящие и исходящие пакеты для локальной mongodb
+```console
+vera@vera:~$ sudo tcpdump -i any -c 200 -A port 27017
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+17:55:10.204914 IP localhost.59826 > localhost.27017: Flags [.], ack 415962992, win 3075, options [nop,nop,TS val 1418303993 ecr 1418183671], length 0
+E..4.i@.@.bX..........i.&......p.....(.....
+T...T...
+17:55:10.204938 IP localhost.27017 > localhost.59826: Flags [.], ack 1, win 3075, options [nop,nop,TS val 1418303993 ecr 1418183671], length 0
+E..4..@.@...........i......p&........(.....
+T...T...
+17:55:11.185113 IP localhost.59826 > localhost.27017: Flags [P.], seq 1:178, ack 1, win 3075, options [nop,nop,TS val 1418304973 ecr 1418303993], length 177
+E....j@.@.a...........i.&......p...........
+T...T........@.x..................find.....app..filter.......limit......singleBatch...lsid......id.......75q..E.......=...$db.....data..$readPreference. ....mode.....primaryPreferred...
+17:55:11.186144 IP localhost.27017 > localhost.59826: Flags [P.], seq 1:145, ack 178, win 3075, options [nop,nop,TS val 1418304974 ecr 1418304973], length 144
+E.....@.@..H........i......p&..L...........
+T...T.......'r	..@.x.........{....cursor.b....firstBatch.4....0.,...._id._q..G&L..tiB.employer_id.....1455....id..........ns.	...data.app...ok........?.
+17:55:11.186157 IP localhost.59826 > localhost.27017: Flags [.], ack 145, win 3075, options [nop,nop,TS val 1418304974 ecr 1418304974], length 0
+E..4.k@.@.bV..........i.&..L.........(.....
+T...T...
+17:55:11.446207 IP localhost.59824 > localhost.27017: Flags [P.], seq 2311194175:2311194270, ack 3360141662, win 6149, options [nop,nop,TS val 1418305234 ecr 1418295221], length 95
+E.....@.@..U..........i....?.G.^...........
+T...T.w._...n.-P.............J....ismaster......$db.....admin..$readPreference......mode.....primary...
+17:55:11.446559 IP localhost.27017 > localhost.59824: Flags [P.], seq 1:225, ack 95, win 512, options [nop,nop,TS val 1418305235 ecr 1418305234], length 224
+E....(@.@...........i....G.^...............
+T...T.......(r	.n.-P..............ismaster...maxBsonObjectSize......maxMessageSizeBytes..l...maxWriteBatchSize.....	localTime....?w....logicalSessionTimeoutMinutes......minWireVersion......maxWireVersion......readOnly...ok........?.
+17:55:11.446568 IP localhost.59824 > localhost.27017: Flags [.], ack 225, win 6149, options [nop,nop,TS val 1418305235 ecr 1418305235], length 0
+E..4..@.@.............i......G.>.....(.....
+T...T...
+^C
+8 packets captured
+17 packets received by filter
+0 packets dropped by kernel
+```
+
+<a name="tcpflow"></a>
+### tcpflow [^](#index "к оглавлению")
+Утилита для мониторинга, захвата и дампа сетевых пакетов.
+
+Например
+```console
+vera@vera:~$ sudo tcpflow -i any -c port 27017
+reportfilename: ./report.xml
+tcpflow: listening on any
+127.000.000.001.59824-127.000.000.001.27017: _....>.4.............J....ismaster......$db.....admin..$readPreference......mode.....primary...
+127.000.000.001.27017-127.000.000.001.59824: .....q...>.4..............ismaster...maxBsonObjectSize......maxMessageSizeBytes..l...maxWriteBatchSize......localTime..~.?w....logicalSessionTimeoutMinutes......minWireVersion......maxWireVersion......readOnly...ok........?.
+127.000.000.001.59826-127.000.000.001.27017: ....2.._..................find.....app..filter.......limit......singleBatch...lsid......id.......75q..E.......=...$db.....data..$readPreference. ....mode.....primaryPreferred...
+127.000.000.001.27017-127.000.000.001.59826: .....q..2.._.........{....cursor.b....firstBatch.4....0.,...._id._q..G&L..tiB.employer_id.....1455....id..........ns.....data.app...ok........?.
+^Ctcpflow: terminating orderly
+```
+
+
+
 
 <a name="syscalls"></a>
 ## Системные и библиотечные вызовы [^](#index "к оглавлению")
